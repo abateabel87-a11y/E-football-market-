@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>የአካውንት ገበያ | eFootball Market</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=Noto+Sans+Ethiopic:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #10150F;
+    --surface: #1A2118;
+    --surface-raised: #212B1E;
+    --line: #2B362A;
+    --chalk: #EDEAE1;
+    --chalk-dim: #A9B0A3;
+    --gold: #D8B23A;
+    --grass: #4FAE6E;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;}
+  html, body{
+    background: var(--bg);
+    color: var(--chalk);
+    font-family: 'Inter', 'Noto Sans Ethiopic', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .display{font-family:'Big Shoulders Display','Noto Sans Ethiopic',sans-serif; font-weight:700;}
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative;
+    padding: 56px 20px 40px;
+    background: radial-gradient(120% 140% at 50% -20%, #1E2B1B 0%, var(--bg) 60%);
+    border-bottom: 1px solid var(--line);
+    text-align:center;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:"";
+    position:absolute; inset:0;
+    background-image: repeating-linear-gradient(180deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 64px);
+    pointer-events:none;
+  }
+  .hero h1{
+    font-size: clamp(36px, 8vw, 58px);
+    line-height: 0.95;
+    letter-spacing: 0.5px;
+    margin: 0 0 10px;
+    color: var(--chalk);
+  }
+  .hero h1 span{ color: var(--grass); }
+  .hero p{
+    max-width: 460px; margin: 0 auto 24px;
+    color: var(--chalk-dim);
+    font-size: 15px;
+    line-height:1.6;
+  }
+  .how-it-works{
+    max-width: 460px; margin: 26px auto 0;
+    text-align: start;
+    border-top: 1px solid var(--line);
+    padding-top: 18px;
+  }
+  .step{
+    display:flex; align-items:flex-start; gap:10px;
+    font-size: 13px; color: var(--chalk-dim);
+    line-height: 1.6; margin-bottom: 10px;
+  }
+  .step a{ color: var(--gold); font-weight:600; }
+  .step-num{
+    flex: 0 0 auto;
+    width: 20px; height:20px; border-radius:50%;
+    background: var(--surface-raised); border:1px solid var(--line);
+    color: var(--chalk); font-size:11px; font-weight:700;
+    display:flex; align-items:center; justify-content:center;
+    margin-top: 1px;
+  }
+  .btn-primary{
+    background: var(--grass);
+    color: #0C1710;
+    border: none;
+    font-weight: 700;
+    font-size: 15px;
+    padding: 13px 26px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .btn-primary:hover{ background:#5EBD7D; }
+
+  /* ---------- Filter bar ---------- */
+  .filter-bar{
+    position: sticky; top:0; z-index: 20;
+    background: rgba(16,21,15,0.92);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--line);
+    padding: 12px 16px;
+    display:flex; gap:8px;
+  }
+  .filter-bar input[type=text]{
+    flex:1;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    color: var(--chalk);
+    padding: 10px 12px;
+    border-radius: 7px;
+    font-size: 14px;
+    font-family: inherit;
+  }
+  .filter-bar select{
+    background: var(--surface);
+    border: 1px solid var(--line);
+    color: var(--chalk);
+    padding: 10px 8px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-family: inherit;
+  }
+
+  /* ---------- Grid ---------- */
+  .wrap{ max-width: 1080px; margin: 0 auto; padding: 18px 16px 80px; }
+  .grid{
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+  @media(min-width: 640px){ .grid{ grid-template-columns: repeat(3, 1fr); } }
+  @media(min-width: 900px){ .grid{ grid-template-columns: repeat(4, 1fr); } }
+
+  .card{
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+    display:flex; flex-direction:column;
+  }
+  .card-bar{ height:4px; width:100%; background: var(--grass); }
+  .card-body{ padding: 12px; display:flex; flex-direction:column; gap:8px; flex:1; }
+  .card-icon{ font-size: 26px; line-height:1; }
+  .card-photo{
+    width: 100%; aspect-ratio: 4/3; object-fit: cover;
+    display:block; background: var(--surface-raised);
+  }
+  .card-name{ font-size: 14.5px; font-weight:600; color:var(--chalk); }
+  .card-desc{ font-size: 12.5px; color: var(--chalk-dim); line-height:1.5; flex:1; }
+  .card-foot{ display:flex; justify-content:space-between; align-items:center; margin-top:4px; }
+  .price{ font-size: 17px; }
+  .price small{ font-size:11px; color:var(--chalk-dim); font-family:'Inter',sans-serif; }
+  .contact-btn{
+    background: var(--surface-raised);
+    border: 1px solid var(--line);
+    color: var(--chalk);
+    font-size: 12px;
+    padding: 7px 10px;
+    border-radius: 6px;
+    cursor:pointer;
+    font-family:inherit;
+  }
+  .contact-btn:hover{ border-color: var(--grass); }
+  .seller-line{ font-size:11px; color:var(--chalk-dim); }
+
+  .empty{ text-align:center; padding: 60px 20px; color: var(--chalk-dim); }
+  .empty .display{ font-size:22px; color:var(--chalk); margin-bottom:6px; }
+
+  /* ---------- Modal ---------- */
+  .overlay{
+    position:fixed; inset:0; background: rgba(6,9,6,0.72);
+    display:none; align-items:flex-end; justify-content:center; z-index:50;
+  }
+  .overlay.open{ display:flex; }
+  @media(min-width:640px){ .overlay{ align-items:center; } }
+  .modal{
+    background: var(--surface);
+    border: 1px solid var(--line);
+    width: 100%; max-width: 480px;
+    max-height: 88vh; overflow-y:auto;
+    border-radius: 14px 14px 0 0;
+    padding: 20px;
+  }
+  @media(min-width:640px){ .modal{ border-radius:14px; } }
+  .modal h2{ font-size:20px; margin: 0 0 4px; }
+  .modal .sub{ color:var(--chalk-dim); font-size:13px; margin-bottom:16px; }
+  .field{ margin-bottom: 12px; }
+  .field label{ display:block; font-size:12.5px; color:var(--chalk-dim); margin-bottom:5px; }
+  .field input, .field select, .field textarea{
+    width:100%;
+    background: var(--surface-raised);
+    border:1px solid var(--line);
+    color: var(--chalk);
+    padding: 10px 11px;
+    border-radius: 7px;
+    font-size: 14px;
+    font-family: inherit;
+  }
+  .field textarea{ resize:vertical; min-height:70px; }
+  .row2{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .modal-actions{ display:flex; gap:10px; margin-top:6px; }
+  .btn-ghost{
+    flex:1; background:transparent; border:1px solid var(--line); color:var(--chalk-dim);
+    padding:12px; border-radius:8px; font-family:inherit; font-size:14px; cursor:pointer;
+  }
+  .btn-primary.wide{ flex:2; }
+  .status-msg{ font-size:12.5px; margin-top:10px; text-align:center; color:var(--chalk-dim); }
+  .fab{
+    position: fixed; bottom: 18px; right: 18px; z-index: 30;
+    width:56px; height:56px; border-radius:50%;
+    background: var(--grass); color:#0C1710; border:none;
+    font-size:26px; cursor:pointer;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+  }
+  footer{ text-align:center; padding: 18px; font-size:11.5px; color: var(--chalk-dim); }
+  .dot{ display:inline-block; width:7px; height:7px; border-radius:50%; background:#666; margin-inline-end:5px; }
+  .dot.ok{ background: var(--grass); }
+  .dot.bad{ background: var(--gold); }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1 class="display">የአካውንት <span>ገበያ</span></h1>
+  <p>የeFootball ጌም አካውንቶች የሚሸጡበትና የሚገዙበት ቦታ።</p>
+  <button class="btn-primary" onclick="openModal()">+ አካውንት ይለጥፉ</button>
+
+  <div class="how-it-works">
+    <div class="step"><span class="step-num">1</span>ገዢና ሻጭ በ Telegram/ስልክ ተገናኝተው ይስማማሉ።</div>
+    <div class="step"><span class="step-num">2</span>ሻጭ የአካውንት email እና password ለ<a href="https://t.me/abelatiktok" target="_blank">@abelatiktok</a> (admin) ይልካል፣ ገዢ ብሩን ለadmin ይከፍላል።</div>
+    <div class="step"><span class="step-num">3</span>Admin አካውንቱን ለገዢ ካስተላለፈ በኋላ ብሩን ለሻጭ ይልካል — ከዚህ ውስጥ 100 ብር የ admin commission ነው።</div>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <input type="text" id="searchInput" placeholder="አካውንት ይፈልጉ..." oninput="render()">
+  <select id="sortSelect" onchange="render()">
+    <option value="new">አዲስ መጀመሪያ</option>
+    <option value="low">ርካሽ መጀመሪያ</option>
+    <option value="high">ውድ መጀመሪያ</option>
+  </select>
+</div>
+
+<div class="wrap">
+  <div id="grid" class="grid"></div>
+  <div id="emptyState" class="empty" style="display:none;">
+    <div class="display">ገበያው ገና ባዶ ነው</div>
+    <div>የመጀመሪያውን አካውንት ለመሸጥ ይለጥፉ።</div>
+  </div>
+</div>
+
+<button class="fab" onclick="openModal()" title="ይለጥፉ">+</button>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <h2 class="display">አካውንት ይለጥፉ</h2>
+    <div class="sub">መረጃውን ይሙሉ — ልጥፉ ወዲያውኑ በገበያው ላይ ይታያል።</div>
+
+    <form id="listingForm" onsubmit="submitListing(event)">
+      <div class="field">
+        <label>የአካውንት ርዕስ</label>
+        <input type="text" id="f_name" placeholder="ለምሳሌ: eFootball አካውንት ለሽያጭ" required>
+      </div>
+
+      <div class="field">
+        <label>ዋጋ (ብር)</label>
+        <input type="number" id="f_price" min="0" placeholder="ለምሳሌ: 3000" required>
+      </div>
+
+      <div class="field">
+        <label>ፎቶ (አማራጭ)</label>
+        <input type="file" id="f_photo" accept="image/*">
+      </div>
+
+      <div class="field">
+        <label>ተጨማሪ መግለጫ</label>
+        <textarea id="f_desc" placeholder="ለምሳሌ: ውስጡ ያሉ ካርዶች፣ Coins መጠን..."></textarea>
+      </div>
+
+      <div class="row2">
+        <div class="field">
+          <label>የእርስዎ ስም</label>
+          <input type="text" id="f_seller" placeholder="ስም" required>
+        </div>
+        <div class="field">
+          <label>Telegram ወይም ስልክ</label>
+          <input type="text" id="f_contact" placeholder="@username ወይም 09..." required>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn-ghost" onclick="closeModal()">ይቅር</button>
+        <button type="submit" class="btn-primary wide" id="submitBtn">ልጥፉ</button>
+      </div>
+      <div class="status-msg" id="formStatus"></div>
+    </form>
+  </div>
+</div>
+
+<footer>
+  <span class="dot" id="connDot"></span><span id="connText">ከገበያ ጋር በመገናኘት ላይ...</span>
+</footer>
+
+<script>
+/* ================= SETUP =================
+   1. Deploy the accompanying marketplace-backend.gs as a Google Apps Script
+      Web App (Execute as: Me, Access: Anyone).
+   2. Paste the deployment /exec URL below as API_BASE.
+   Until this is set, the page runs with sample data only (nothing you post is saved).
+============================================= */
+const API_BASE = ""; // <-- paste your Apps Script Web App URL here
+
+let listings = [];
+
+const sampleListings = [
+  { id:"s1", name:"eFootball አካውንት - Full Squad", price:3000, desc:"90+ ካርዶች ያሉት፣ Coin 200k ጋር።", seller:"Biniam", contact:"@bini_gg", ts: Date.now()-3600000 },
+  { id:"s2", name:"eFootball አካውንት - Black Ball ካርዶች ያሉት", price:5500, desc:"3 Black Ball እና 10 Gold ካርዶች አሉት።", seller:"Selam", contact:"0912345678", ts: Date.now()-7200000 },
+  { id:"s3", name:"eFootball አካውንት ለጀማሪ", price:900, desc:"Coin 50k ጋር።", seller:"Kal", contact:"0922334455", ts: Date.now()-14400000 }
+];
+
+async function loadListings(){
+  if(!API_BASE){
+    listings = sampleListings;
+    setConn(false, "የናሙና ውሂብ እየታየ ነው — backend አልተገናኘም");
+    render();
+    return;
+  }
+  try{
+    const res = await fetch(API_BASE + "?action=list");
+    const data = await res.json();
+    listings = data.listings || [];
+    setConn(true, "ከገበያው ጋር ተገናኝቷል");
+  }catch(e){
+    listings = sampleListings;
+    setConn(false, "ግንኙነት አልተሳካም — የናሙና ውሂብ እየታየ ነው");
+  }
+  render();
+}
+
+function setConn(ok, text){
+  document.getElementById("connDot").className = "dot " + (ok ? "ok" : "bad");
+  document.getElementById("connText").textContent = text;
+}
+
+function render(){
+  const q = document.getElementById("searchInput").value.trim().toLowerCase();
+  const sort = document.getElementById("sortSelect").value;
+
+  let items = listings.filter(l=> !q || l.name.toLowerCase().includes(q));
+
+  if(sort === "low") items.sort((a,b)=>a.price-b.price);
+  else if(sort === "high") items.sort((a,b)=>b.price-a.price);
+  else items.sort((a,b)=>b.ts-a.ts);
+
+  const grid = document.getElementById("grid");
+  const empty = document.getElementById("emptyState");
+
+  if(items.length === 0){
+    grid.innerHTML = "";
+    empty.style.display = "block";
+    return;
+  }
+  empty.style.display = "none";
+
+  grid.innerHTML = items.map(l=> `
+    <div class="card">
+      <div class="card-bar"></div>
+      ${l.imageUrl ? `<img class="card-photo" src="${l.imageUrl}" alt="">` : ""}
+      <div class="card-body">
+        ${l.imageUrl ? "" : `<div class="card-icon">🎮</div>`}
+        <div class="card-name">${escapeHtml(l.name)}</div>
+        <div class="card-desc">${escapeHtml(l.desc || "")}</div>
+        <div class="seller-line">በ ${escapeHtml(l.seller)}</div>
+        <div class="card-foot">
+          <div class="price display">${Number(l.price).toLocaleString()} <small>ብር</small></div>
+          <button class="contact-btn" onclick='contactSeller(${JSON.stringify(l.contact)})'>አግኙኝ</button>
+        </div>
+      </div>
+    </div>`
+  ).join("");
+}
+
+function escapeHtml(str){
+  return String(str).replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+}
+
+function contactSeller(contact){
+  const c = contact.trim();
+  if(c.startsWith("@")){
+    window.open("https://t.me/" + c.slice(1), "_blank");
+  } else if(/^[0-9+][0-9+\-\s]{6,}$/.test(c)){
+    window.open("tel:" + c.replace(/\s/g,""), "_blank");
+  } else {
+    navigator.clipboard?.writeText(c);
+    alert("ተቀድቷል፡ " + c);
+  }
+}
+
+function openModal(){ document.getElementById("overlay").classList.add("open"); }
+function closeModal(){
+  document.getElementById("overlay").classList.remove("open");
+  document.getElementById("listingForm").reset();
+  document.getElementById("formStatus").textContent = "";
+}
+document.getElementById("overlay").addEventListener("click", (e)=>{
+  if(e.target.id === "overlay") closeModal();
+});
+
+async function fileToBase64(file){
+  return new Promise((resolve, reject)=>{
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(",")[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+async function submitListing(e){
+  e.preventDefault();
+  const btn = document.getElementById("submitBtn");
+  const statusEl = document.getElementById("formStatus");
+  btn.disabled = true; btn.textContent = "በመላክ ላይ...";
+
+  const photoFile = document.getElementById("f_photo").files[0];
+  let photoBase64 = "", photoMime = "";
+  if(photoFile){
+    statusEl.textContent = "ፎቶ በመላክ ላይ...";
+    photoBase64 = await fileToBase64(photoFile);
+    photoMime = photoFile.type;
+  }
+
+  const payload = {
+    action: "create",
+    name: document.getElementById("f_name").value,
+    price: document.getElementById("f_price").value,
+    desc: document.getElementById("f_desc").value,
+    seller: document.getElementById("f_seller").value,
+    contact: document.getElementById("f_contact").value,
+    photoBase64: photoBase64,
+    photoMime: photoMime
+  };
+
+  if(!API_BASE){
+    listings.unshift({ ...payload, imageUrl: photoBase64 ? ("data:"+photoMime+";base64,"+photoBase64) : "", id: "local-"+Date.now(), ts: Date.now() });
+    statusEl.textContent = "Backend ገና አልተገናኘም — ይህ ልጥፍ በዚህ ገጽ ውስጥ ብቻ ይታያል (አይቀመጥም)።";
+    render();
+    btn.disabled = false; btn.textContent = "ልጥፉ";
+    setTimeout(closeModal, 1400);
+    return;
+  }
+
+  try{
+    statusEl.textContent = "በመላክ ላይ...";
+    const res = await fetch(API_BASE, {
+      method: "POST",
+      headers: {"Content-Type":"text/plain;charset=utf-8"},
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if(data.success){
+      statusEl.textContent = "ተለጥፏል!";
+      await loadListings();
+      setTimeout(closeModal, 700);
+    } else {
+      statusEl.textContent = "ስህተት ተፈጥሯል፣ እንደገና ይሞክሩ።";
+    }
+  }catch(err){
+    statusEl.textContent = "ግንኙነት አልተሳካም። ደግመው ይሞክሩ።";
+  }
+  btn.disabled = false; btn.textContent = "ልጥፉ";
+}
+
+loadListings();
+</script>
+</body>
+</html>
